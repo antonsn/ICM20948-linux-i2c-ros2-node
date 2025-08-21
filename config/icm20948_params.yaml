@@ -1,0 +1,6 @@
+icm20948_node:
+  ros__parameters:
+    publish_rate_hz: 200.0
+    frame_id: "imu_link"
+    i2c_device: "/dev/i2c-7"  # Your actual device
+    calibrate_on_startup: true
