@@ -106,7 +106,7 @@ ICM20948::Config ICM20948ROS2Node::createOpenVINSConfig()
     config.mMagEnabled = false;
     
     // Use Madgwick filter for orientation estimation
-    config.mAHRS = ICM20948::MADGWICK;
+    config.mAHRS = ICM20948::NONE;
     
     return config;
 }
