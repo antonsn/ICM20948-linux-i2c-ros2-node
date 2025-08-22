@@ -87,16 +87,16 @@ ICM20948::Config ICM20948ROS2Node::createOpenVINSConfig()
     
     // Gyroscope configuration for OpenVINS
     config.mGyro.mEnabled = true;
-    config.mGyro.mRange = ICM20948::GYRO_RANGE_2000DPS; // Good range for VIO
+    config.mGyro.mRange = ICM20948::GYRO_RANGE_250DPS; // Good range for VIO
     config.mGyro.mSampleRateDivisor = 0; // Maximum rate
-    config.mGyro.mDLPFBandwidth = ICM20948::GYRO_DLPF_BANDWIDTH_197HZ; // Good bandwidth for VIO
+    config.mGyro.mDLPFBandwidth = ICM20948::GYRO_DLPF_BANDWIDTH_120HZ; // Good bandwidth for VIO
     config.mGyro.mAveraging = ICM20948::GYRO_AVERAGING_1X; // No averaging for max rate
     
     // Accelerometer configuration for OpenVINS
     config.mAcc.mEnabled = true;
-    config.mAcc.mRange = ICM20948::ACC_RANGE_8G; // Good range for VIO
+    config.mAcc.mRange = ICM20948::ACC_RANGE_4G; // Good range for VIO
     config.mAcc.mSampleRateDivisor = 0; // Maximum rate
-    config.mAcc.mDLPFBandwidth = ICM20948::ACC_DLPF_BANDWIDTH_246HZ; // Good bandwidth for VIO
+    config.mAcc.mDLPFBandwidth = ICM20948::ACC_DLPF_BANDWIDTH_111HZ; // Good bandwidth for VIO
     config.mAcc.mAveraging = ICM20948::ACC_AVERAGING_NONE; // No averaging for max speed
     
     // Temperature sensor
