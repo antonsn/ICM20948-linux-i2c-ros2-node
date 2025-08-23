@@ -89,18 +89,18 @@ ICM20948::Config ICM20948ROS2Node::createOpenVINSConfig()
     config.mGyro.mEnabled = true;
     config.mGyro.mRange = ICM20948::GYRO_RANGE_250DPS; // Good range for VIO
     config.mGyro.mSampleRateDivisor = 0; // Maximum rate
-    config.mGyro.mDLPFBandwidth = ICM20948::GYRO_DLPF_BANDWIDTH_120HZ; // Good bandwidth for VIO
+    config.mGyro.mDLPFBandwidth = ICM20948::GYRO_DLPF_BANDWIDTH_51HZ; // Good bandwidth for VIO
     config.mGyro.mAveraging = ICM20948::GYRO_AVERAGING_1X; // No averaging for max rate
     
     // Accelerometer configuration for OpenVINS
     config.mAcc.mEnabled = true;
     config.mAcc.mRange = ICM20948::ACC_RANGE_4G; // Good range for VIO
     config.mAcc.mSampleRateDivisor = 0; // Maximum rate
-    config.mAcc.mDLPFBandwidth = ICM20948::ACC_DLPF_BANDWIDTH_111HZ; // Good bandwidth for VIO
+    config.mAcc.mDLPFBandwidth = ICM20948::ACC_DLPF_BANDWIDTH_50HZ; // Good bandwidth for VIO
     config.mAcc.mAveraging = ICM20948::ACC_AVERAGING_NONE; // No averaging for max speed
     
     // Temperature sensor
-    config.mTemp.mEnabled = true;
+    config.mTemp.mEnabled = false;
     
     // Disable magnetometer for higher rates (OpenVINS doesn't need it for VIO)
     config.mMagEnabled = false;
@@ -136,13 +136,13 @@ void ICM20948ROS2Node::publishIMUData(const IMUData& data)
     
     // Set angular velocity (rad/s) - already in rad/s from your sensor
     imu_msg.angular_velocity.x = data.mGyro[0];
-    imu_msg.angular_velocity.y = data.mGyro[1];
+    imu_msg.angular_velocity.y = -data.mGyro[1];
     imu_msg.angular_velocity.z = data.mGyro[2];
     
     // Set linear acceleration (m/s²) - convert from G to m/s²
     const double g = 9.80665; // Standard gravity
     imu_msg.linear_acceleration.x = data.mAcc[0] * g;
-    imu_msg.linear_acceleration.y = data.mAcc[1] * g;
+    imu_msg.linear_acceleration.y = - data.mAcc[1] * g;
     imu_msg.linear_acceleration.z = data.mAcc[2] * g;
     
     // Set covariance matrices
