@@ -13,23 +13,23 @@ ICM20948ROS2Node::ICM20948ROS2Node() : Node("icm20948_node")
     frame_id_ = this->get_parameter("frame_id").as_string();
     calibrate_on_startup_ = this->get_parameter("calibrate_on_startup").as_bool();
     
-    // Initialize covariance matrices for OpenVINS (tune based on your calibration)
+    // Initialize covariance matrices for OpenVINS (set to -1.0 so OpenVINS ignores them)
     angular_velocity_covariance_ = {
-        0.001, 0.0,   0.0,
-        0.0,   0.001, 0.0,
-        0.0,   0.0,   0.001
+        -1.0, 0.0,  0.0,
+        0.0,  -1.0, 0.0,
+        0.0,  0.0,  -1.0
     };
     
     linear_acceleration_covariance_ = {
-        0.01, 0.0,  0.0,
-        0.0,  0.01, 0.0,
-        0.0,  0.0,  0.01
+        -1.0, 0.0,  0.0,
+        0.0,  -1.0, 0.0,
+        0.0,  0.0,  -1.0
     };
     
     orientation_covariance_ = {
-        0.1, 0.0, 0.0,
-        0.0, 0.1, 0.0,
-        0.0, 0.0, 0.1
+        -1.0, 0.0,  0.0,
+        0.0,  -1.0, 0.0,
+        0.0,  0.0,  -1.0
     };
     
     // Create publisher for OpenVINS raw IMU topic
@@ -90,14 +90,14 @@ ICM20948::Config ICM20948ROS2Node::createOpenVINSConfig()
     config.mGyro.mRange = ICM20948::GYRO_RANGE_250DPS; // Good range for VIO
     config.mGyro.mSampleRateDivisor = 0; // Maximum rate
     config.mGyro.mDLPFBandwidth = ICM20948::GYRO_DLPF_BANDWIDTH_51HZ; // Good bandwidth for VIO
-    config.mGyro.mAveraging = ICM20948::GYRO_AVERAGING_1X; // No averaging for max rate
-    
+    config.mGyro.mAveraging = ICM20948::GYRO_AVERAGING_8X; 
+
     // Accelerometer configuration for OpenVINS
     config.mAcc.mEnabled = true;
     config.mAcc.mRange = ICM20948::ACC_RANGE_4G; // Good range for VIO
     config.mAcc.mSampleRateDivisor = 0; // Maximum rate
     config.mAcc.mDLPFBandwidth = ICM20948::ACC_DLPF_BANDWIDTH_50HZ; // Good bandwidth for VIO
-    config.mAcc.mAveraging = ICM20948::ACC_AVERAGING_NONE; // No averaging for max speed
+    config.mAcc.mAveraging = ICM20948::ACC_AVERAGING_8X; 
     
     // Temperature sensor
     config.mTemp.mEnabled = false;
@@ -146,11 +146,11 @@ void ICM20948ROS2Node::publishIMUData(const IMUData& data)
     imu_msg.linear_acceleration.z = data.mAcc[2] * g;
     
     // Set covariance matrices
-    for (size_t i = 0; i < 9; ++i) {
-        imu_msg.orientation_covariance[i] = orientation_covariance_[i];
-        imu_msg.angular_velocity_covariance[i] = angular_velocity_covariance_[i];
-        imu_msg.linear_acceleration_covariance[i] = linear_acceleration_covariance_[i];
-    }
+    // for (size_t i = 0; i < 9; ++i) {
+    //     imu_msg.orientation_covariance[i] = orientation_covariance_[i];
+    //     imu_msg.angular_velocity_covariance[i] = angular_velocity_covariance_[i];
+    //     imu_msg.linear_acceleration_covariance[i] = linear_acceleration_covariance_[i];
+    // }
     
     // Debug logging - show IMU values when debug level is enabled
     RCLCPP_DEBUG(this->get_logger(), 
